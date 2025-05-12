@@ -1,0 +1,33 @@
+.container {
+    padding: 2rem 0;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+}
+.cardsGrid{
+    display: flex;
+    justify-content: center;
+    
+}
+.searchBoxContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    margin-bottom: 30px;
+}
+.searchBox{
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 16px;
+}

@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    border-radius: 12px;
+    
+}
+
+.title {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.stepper {
+    margin-bottom: 2rem;
+}
+
+.form {
+    margin-bottom: 2rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}

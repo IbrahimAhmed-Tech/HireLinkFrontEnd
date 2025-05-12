@@ -1,0 +1,52 @@
+.card {
+    height: 320px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.cardTitle{
+    
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'sans-serif';
+}
+.cardContent {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.description {
+    margin-top: 8px;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.chipBox {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.buttonBox {
+    padding: 16px;
+    padding-top: 0;
+}
+.chip {
+    color: white;
+    font-weight: 500;
+}
+
+.green {
+    background-color: #4caf50;
+    /* Material UI green */
+}
+
+.red {
+    background-color: #f44336;
+    /* Material UI red */
+}

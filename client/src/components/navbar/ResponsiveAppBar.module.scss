@@ -1,0 +1,10 @@
+/* ResponsiveAppBar.module.scss */
+.postJobBtn {
+    text-transform: none;
+    background-color: #1976d2;
+    color: white;
+
+    &:hover {
+        background-color: #115293;
+    }
+}

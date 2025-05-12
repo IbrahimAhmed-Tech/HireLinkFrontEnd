@@ -1,0 +1,29 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f6f8;
+}
+
+.formSection {
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.formBox {
+    width: 100%;
+}
+
+.submitButton {
+    margin-top: 1rem;
+}
+
+.loginText {
+    margin-top: 1rem;
+    text-align: center;
+}
