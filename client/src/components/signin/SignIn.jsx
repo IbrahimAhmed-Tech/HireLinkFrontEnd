@@ -10,36 +10,48 @@ import {
     InputAdornment,
     IconButton
 } from "@mui/material";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import axios from "axios";
 
 const SignIn = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState("");
     const [signingIn, setSigningIn] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
         setSigningIn(true);
+    
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login`, {
-                email, password
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users/login`, {
+                email,
+                password,
             });
-
+    
             const { token, user } = response.data;
+    
+            
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(user));
-            setSigningIn(false);
-            window.location.href = "/home";
+    
+            toast.success("Login successful");
+            navigate("/home");
         } catch (err) {
-            const message = err.response?.data?.error || "Login failed";
-            setError(message);
+            if (err.response?.status === 401) {
+                toast.error("Invalid email or password");
+            } else {
+                const message = err.response?.data?.error || "Something went wrong. Please try again.";
+                toast.error(message);
+            }
+        } finally {
             setSigningIn(false);
         }
     };
+    
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
@@ -95,11 +107,7 @@ const SignIn = () => {
                         </Button>
                     </form>
 
-                    {error && (
-                        <Typography color="error" align="center" sx={{ mt: 2 }}>
-                            {error}
-                        </Typography>
-                    )}
+                    
 
                     <Typography variant="body2" className={styles.registerText}>
                         Don't have an account? <Link href="/signup">Register</Link>

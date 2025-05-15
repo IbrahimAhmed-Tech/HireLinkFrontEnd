@@ -1,24 +1,57 @@
-import React, { useState } from 'react';
-import {
-    Card, CardContent, Typography, Button, Chip, Box,
-    Dialog, DialogTitle, DialogContent, IconButton
-} from '@mui/material';
-import styles from './JobCard.module.scss';
 import CloseIcon from '@mui/icons-material/Close';
+import {
+    Box,
+    Button,
+    Card, CardContent,
+    Chip,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Typography
+} from '@mui/material';
+import { useState } from 'react';
+import styles from './JobCard.module.scss';
 const JobCard = ({ job }) => {
+   
     const [open, setOpen] = useState(false);
 
     const handleDialogOpen = () => setOpen(true);
     const handleDialogClose = () => setOpen(false);
     const user = JSON.parse(localStorage.getItem('user'));
-    const salaryRange = user?.salaryRange?.split('-').map(Number);
-    const offeredSalary = Number(job.salary);
-    console.log("salaryRange", salaryRange);
-    console.log("offeredSalary", offeredSalary);
-    const isInRange = salaryRange && offeredSalary >= salaryRange[0] && offeredSalary <= salaryRange[1];
+    const expectedSalary = Number(user?.expectedSalary); 
+    const userRole= user?.role;
+    let isInRange = false;
+    
+    if (userRole === 'candidate') {
+    const rawSalary = job.salary || "";
+    const cleanedSalary = rawSalary
+        .replace(/PKR|\/month|\/Month|\/MONTH|Rs\.?|,/gi, "")
+        .trim();
 
-    const chipClass = `${styles.chip} ${isInRange ? styles.green : styles.red}`;
+    const isRange = cleanedSalary.includes('-');
 
+
+    if (!isNaN(expectedSalary)) {
+        if (isRange) {
+            const jobSalaryRange = cleanedSalary
+                .split('-')
+                .map(s => Number(s.trim()));
+
+            if (
+                jobSalaryRange.length === 2 &&
+                !isNaN(jobSalaryRange[0])
+            ) {
+                isInRange = jobSalaryRange[0] >= expectedSalary;
+            }
+        } else {
+            const jobSalary = Number(cleanedSalary);
+            if (!isNaN(jobSalary)) {
+                isInRange = jobSalary >= expectedSalary;
+            }
+        }
+    }
+}    
     return (
         <>
             <Card className={styles.card}>
@@ -29,7 +62,11 @@ const JobCard = ({ job }) => {
                     <Typography variant="subtitle2" color="text.secondary" noWrap>
                         {job.company} – {job.location}
                     </Typography>
-                    <Chip label={job.salary} size="small" className={chipClass} />
+                    <Chip label={job.salary} size="small"
+                    
+                        sx={{ backgroundColor: isInRange ? '#4caf50' : '#f44336'}}
+                    
+                    />
                     <Typography variant="body2" sx={{ mt: 2 }}><strong>Applicants:</strong> {job.applicants || 0} </Typography>
                         <Typography variant="body2" sx={{ mt: 2 }}><strong>Last date to apply:</strong> {new Date(job.applicationDeadline).toLocaleDateString()}</Typography>                    
                     <Box className={styles.chipBox}>

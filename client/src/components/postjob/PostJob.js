@@ -9,6 +9,8 @@ import {
     MenuItem,
     Typography,
     Paper,
+    FormControlLabel,
+    Checkbox,
 } from '@mui/material';
 import axios from 'axios';
 import styles from './PostJob.module.scss';
@@ -31,6 +33,7 @@ const PostJob = () => {
         benefits: '',
         category: '',
         applicationDeadline: '',
+        isUrgent: false,
     });
 
     const handleChange = (e) => {
@@ -44,8 +47,11 @@ const PostJob = () => {
     const handleBack = () => {
         setActiveStep((prev) => prev - 1);
     };
+
+
     const handleSubmit = async () => {
         console.log("formData",formData)
+        
         try {
     const response = await axios.post(
     `${process.env.REACT_APP_API_URL}/api/jobs/post-job`,
@@ -113,7 +119,19 @@ const PostJob = () => {
             case 3:
                 return (
                     <>
+                
                         <TextField name="applicationDeadline" label="Application Deadline" type="date" value={formData.applicationDeadline} onChange={handleChange} fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={formData.isUrgent}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, isUrgent: e.target.checked })
+                                    }
+                                />
+                            }
+                            label="Urgent Hiring"
+                        />
                     </>
                 );
             default:

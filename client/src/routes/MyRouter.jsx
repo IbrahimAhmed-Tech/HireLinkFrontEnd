@@ -4,6 +4,7 @@ import HomePage from "../pages/home";
 import PostJobPage from "../pages/postjob";
 import SignInPage from "../pages/signin";
 import SignUpPage from "../pages/signup";
+import ReviewsPage from "../pages/reviews";
 import AuthLayoutRoutes from "./AuthLayoutRoutes";
 import PrivateLayoutRoutes from "./PrivateLayoutRoutes";
 import PublicLayoutRoutes from "./PublicLayoutRoutes";
@@ -21,12 +22,14 @@ const MyRouter = () => {
                 </Route>
                 {/* Public Routes */}
                 <Route element={<PublicLayoutRoutes />}>
-                    <Route path="/home" element={<HomePage />} />                  
+                    <Route path="/home" element={<HomePage />} /> 
+                    <Route path="/reviews" element={<ReviewsPage />} />                 
                 </Route>
 
                 {/* Private Routes */}
                 <Route element={<PrivateLayoutRoutes />}>
                     <Route path="/post-job" element={<PostJobPage />} />
+
                 </Route>
 
                 {/* Catch-all route for 404 */}

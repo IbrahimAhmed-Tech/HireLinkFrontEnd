@@ -13,15 +13,18 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
-import styles from './ResponsiveAppBar.module.scss'; // ✅ SCSS Module
+import styles from './ResponsiveAppBar.module.scss'; 
+import { pages,settings } from './helper';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userRole = user ? user.role : null;
+  const userProfilePicture = user?.profilePicture ;
+  
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -58,7 +61,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            
           </Typography>
 
           {/* Mobile Menu */}
@@ -90,15 +93,19 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <Link href={page.route} key={page.name} passHref legacyBehavior underline="none">
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
-              <Link to="/post-job" passHref>
-                <Button variant="contained" className={styles.postJobBtn}>
-                  Post a Job
-                </Button>
-              </Link>
+              {userRole === 'hiringManager' && (
+                <Link to="/post-job" passHref underline="none">
+                  <Button variant="contained" className={styles.postJobBtn}>
+                    Post a Job
+                  </Button>
+                </Link>
+              )}
             </Menu>
           </Box>
 
@@ -124,27 +131,37 @@ function ResponsiveAppBar() {
 
           {/* Desktop Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+          {pages.map((page) => (
+            <Link to={page.route} key={page.name} passHref legacyBehavior >
               <Button
-                key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  textDecoration: 'none', 
+                }}
               >
-                {page}
+                {page.name}
               </Button>
-            ))}
+              
+            </Link>
+          
+))}
           </Box>
 
           {/* Right-side actions */}
           <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Link to="/post-job" passHref>
-              <Button variant="contained" className={styles.postJobBtn}>
-                Post a Job
-              </Button>
-            </Link>
+            {userRole === 'hiringManager' && (
+              <Link to="/post-job" passHref>
+                <Button variant="contained" className={styles.postJobBtn}>
+                  Post a Job
+                </Button>
+              </Link>
+            )}
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src={userProfilePicture} />
               </IconButton>
             </Tooltip>
           </Box>

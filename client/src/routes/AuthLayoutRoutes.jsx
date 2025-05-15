@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AuthLayout from "./AuthLayout"; // Import your AuthLayout component
+import AuthLayout from "./AuthLayout"; 
 
 const AuthLayoutRoutes = () => {
     return (
