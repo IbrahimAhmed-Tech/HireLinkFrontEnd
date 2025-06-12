@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Typography,
@@ -11,27 +11,19 @@ import {
     Stack,
 } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
+import toast from "react-hot-toast";
+import axios from 'axios';
 
 const CompanyReviews = () => {
-    const [reviews, setReviews] = useState([
-        {
-            id: 1,
-            name: 'John Doe',
-            rating: 4,
-            comment: 'Great work environment!',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            rating: 5,
-            comment: 'Amazing team and leadership.',
-        },
-    ]);
+    const token = localStorage.getItem('token'); // or however you're storing it
+    const [loading, setLoading] = useState(true);
+
+    const [reviews, setReviews] = useState([]);
 
     const [newReview, setNewReview] = useState({
-        name: '',
+        companyName: '',
         rating: 0,
-        comment: '',
+        text: '',
     });
 
     const handleChange = (e) => {
@@ -41,36 +33,86 @@ const CompanyReviews = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newReview.name || !newReview.rating || !newReview.comment) return;
+        if (!newReview.companyName || !newReview.rating || !newReview.text)
+        {
+            toast.error("Please fill all the fields");
+            return;
+        }
+        try {
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/reviews/post-review`,
+                newReview,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            console.log("response.data",response.data);
+            if (response.data.status === 'success') {         
+            toast.success("Review posted successfully");
+            setNewReview({
+                companyName: '',
+                rating: 0,
+                text: '',
+            });
+            }
+            
+        } catch (error) {
+            console.error('Error submitting review:', error);
+        }
 
-        setReviews([
-            ...reviews,
-            { ...newReview, id: Date.now() },
-        ]);
-
-        setNewReview({ name: '', rating: 0, comment: '' });
+        
     };
 
+    const fetchReviews = async () => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/api/reviews/fetch-reviews`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer mysecrettoken"
+                }
+            });
+
+            const data = await res.json();
+            console.log("Fetched Reviews:-------", data);
+
+
+            
+            setReviews(data.reviews || []);
+        } catch (error) {
+            console.error("Failed to fetch jobs:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        fetchReviews();
+    }, []);
     return (
-        <Box sx={{ maxWidth: 700, mx: 'auto', mt: 4, px: 2 }}>
+        <Box sx={{ maxWidth: 700, mx: 'auto', mt: 4, mb:4, px: 2 }}>
             <Typography variant="h4" fontWeight={600} mb={3}>
                 Company Reviews
             </Typography>
 
             {reviews.map((review) => (
-                <Card key={review.id} sx={{ mb: 2 }}>
+                <Card key={review._id} sx={{ mb: 2 }}>
                     <CardContent>
                         <Stack direction="row" alignItems="center" spacing={2}>
                             <Avatar sx={{ bgcolor: deepPurple[500] }}>
-                                {review.name.charAt(0).toUpperCase()}
+                                {review.postedBy.fullName.charAt(0).toUpperCase()}
                             </Avatar>
-                            <Box>
-                                <Typography fontWeight={600}>{review.name}</Typography>
-                                <Rating value={review.rating} readOnly size="small" />
+                            <Box sx={{display:"flex", flexDirection:"column"}}>
+                                <Typography >{review.postedBy.fullName}</Typography>
+                                <Typography   fontWeight={600}>
+                                    {review.companyName}
+                                </Typography>
+                                <Rating value={review.rating} readOnly size="small" sx={{ mt: 0.5 }} />
                                 <Typography variant="body2" mt={1}>
-                                    {review.comment}
+                                    {review.text}
                                 </Typography>
                             </Box>
                         </Stack>
@@ -78,15 +120,17 @@ const CompanyReviews = () => {
                 </Card>
             ))}
 
+
+
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
                 <Typography variant="h6" mb={2}>
                     Submit Your Review
                 </Typography>
 
                 <TextField
-                    label="Your Name"
-                    name="name"
-                    value={newReview.name}
+                    label="Company Name"
+                    name="companyName"
+                    value={newReview.companyName}
                     onChange={handleChange}
                     fullWidth
                     margin="normal"
@@ -104,8 +148,8 @@ const CompanyReviews = () => {
 
                 <TextField
                     label="Your Review"
-                    name="comment"
-                    value={newReview.comment}
+                    name="text"
+                    value={newReview.text}
                     onChange={handleChange}
                     fullWidth
                     multiline
@@ -114,7 +158,8 @@ const CompanyReviews = () => {
                     required
                 />
 
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" variant="contained" color="secondary"
+                 >
                     Submit Review
                 </Button>
             </Box>

@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import Layout from "./Layout"; 
+import Layout from "./Layout";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+import axios from 'axios';
 
 const PrivateLayoutRoutes = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        const checkToken = async () => {
+            if (!token) {
+                toast.error("Unauthorized User");
+                navigate("/");
+                return;
+            }
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/validate-token`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (response.status !== 200) {
+                    toast.error("Invalid token. Please log in again.");
+                    navigate("/");
+                    return;
+                }
+            } catch (err) {
+                localStorage.removeItem("token");
+                console.log(err?.message);
+            }
+        };
+        checkToken();
+    }, [navigate]);
+
     return (
         <>
             <Layout>
@@ -11,5 +47,27 @@ const PrivateLayoutRoutes = () => {
         </>
     );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default PrivateLayoutRoutes;

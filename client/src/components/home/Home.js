@@ -19,6 +19,7 @@ const Home = () => {
             });
 
             const data = await res.json();
+            console.log("Fetched jobs:-------", data);
             const allLocations = data.jobs.map(job => job.location);
 
            

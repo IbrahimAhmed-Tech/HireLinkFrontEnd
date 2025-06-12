@@ -116,7 +116,7 @@ const SignUp = () => {
             console.log("Payload:", payload);
 
             const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/users/create-user`,
+                `${process.env.REACT_APP_API_URL}/api/auth/create-user`,
                 { formData: payload }
             );
 

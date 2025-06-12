@@ -1,6 +1,5 @@
 import React from 'react'
 import PostJob from '../components/postjob/PostJob'
-
 const PostJobPage = () => {
   return (
     <div>
@@ -8,5 +7,9 @@ const PostJobPage = () => {
     </div>
   )
 }
-
 export default PostJobPage
+
+
+
+
+

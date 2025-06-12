@@ -1,6 +1,7 @@
 import React from 'react'
 import CompanyReviews from '../components/reviews/CompanyReviews'
 
+
 const ReviewsPage = () => {
   return (
     <div>
@@ -8,5 +9,16 @@ const ReviewsPage = () => {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
 
 export default ReviewsPage

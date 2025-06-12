@@ -132,15 +132,11 @@ function ResponsiveAppBar() {
           {/* Desktop Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           {pages.map((page) => (
-            <Link to={page.route} key={page.name} passHref legacyBehavior >
+            <Link to={page.route} key={page.name} passHref legacyBehavior underline="none" className={styles.navLink}>
               <Button
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: 'white',
-                  display: 'block',
-                  textDecoration: 'none', 
-                }}
+                onClick={handleCloseNavMenu}               
+                className={styles.navButton}
+                sx={{color:'black'}}
               >
                 {page.name}
               </Button>

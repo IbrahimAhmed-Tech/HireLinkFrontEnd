@@ -1,6 +1,8 @@
 import React from 'react'
 import SignIn from '../components/signin/SignIn'
 
+
+
 const SignInPage = () => {
   return (
     <div>
@@ -8,5 +10,24 @@ const SignInPage = () => {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default SignInPage

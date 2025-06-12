@@ -27,7 +27,7 @@ const SignIn = () => {
         setSigningIn(true);
     
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/users/login`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
                 email,
                 password,
             });

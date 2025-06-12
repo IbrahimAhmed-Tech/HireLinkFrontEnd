@@ -15,7 +15,7 @@ import styles from './JobCard.module.scss';
 const JobCard = ({ job }) => {
    
     const [open, setOpen] = useState(false);
-
+    console.log(job.applicationDeadline)
     const handleDialogOpen = () => setOpen(true);
     const handleDialogClose = () => setOpen(false);
     const user = JSON.parse(localStorage.getItem('user'));
