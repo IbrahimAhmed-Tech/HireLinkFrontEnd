@@ -1,4 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
+
+
+
 import {
     Box,
     Button,
@@ -98,6 +101,7 @@ const JobCard = ({ job }) => {
                         }}
                     >
                         <CloseIcon />
+                    
                     </IconButton>
                 </DialogTitle>                <DialogContent dividers>
                     <Typography variant="body2" sx={{ mt: 2 }}><strong>Description:</strong> {job.description}</Typography>

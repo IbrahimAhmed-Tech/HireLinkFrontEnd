@@ -9,15 +9,17 @@ import {
     CardContent,
     Avatar,
     Stack,
+    IconButton
 } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
 import toast from "react-hot-toast";
 import axios from 'axios';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+
 
 const CompanyReviews = () => {
-    const token = localStorage.getItem('token'); // or however you're storing it
+    const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
-
     const [reviews, setReviews] = useState([]);
 
     const [newReview, setNewReview] = useState({
@@ -35,8 +37,7 @@ const CompanyReviews = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newReview.companyName || !newReview.rating || !newReview.text)
-        {
+        if (!newReview.companyName || !newReview.rating || !newReview.text) {
             toast.error("Please fill all the fields");
             return;
         }
@@ -50,21 +51,18 @@ const CompanyReviews = () => {
                     }
                 }
             );
-            console.log("response.data",response.data);
-            if (response.data.status === 'success') {         
-            toast.success("Review posted successfully");
-            setNewReview({
-                companyName: '',
-                rating: 0,
-                text: '',
-            });
+            if (response.data.status === 'success') {
+                toast.success("Review posted successfully");
+                setNewReview({
+                    companyName: '',
+                    rating: 0,
+                    text: '',
+                });
+                fetchReviews(); // Refresh list
             }
-            
         } catch (error) {
             console.error('Error submitting review:', error);
         }
-
-        
     };
 
     const fetchReviews = async () => {
@@ -76,53 +74,75 @@ const CompanyReviews = () => {
                     Authorization: "Bearer mysecrettoken"
                 }
             });
-
             const data = await res.json();
-            console.log("Fetched Reviews:-------", data);
-
-
-            
             setReviews(data.reviews || []);
         } catch (error) {
-            console.error("Failed to fetch jobs:", error);
+            console.error("Failed to fetch reviews:", error);
         } finally {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         fetchReviews();
     }, []);
+
     return (
-        <Box sx={{ maxWidth: 700, mx: 'auto', mt: 4, mb:4, px: 2 }}>
-            <Typography variant="h4" fontWeight={600} mb={3}>
+        <Box
+            sx={{
+                maxWidth: 700,
+                mx: 'auto',
+                mt: 5,
+                mb: 5,
+                px: { xs: 2, sm: 4 },
+                py: 4,
+                backgroundColor: '#f9f9fb',
+                borderRadius: 3,
+                boxShadow: 3,
+            }}
+        >
+            <Typography variant="h4" fontWeight={600} mb={4}>
                 Company Reviews
             </Typography>
 
             {reviews.map((review) => (
-                <Card key={review._id} sx={{ mb: 2 }}>
+                <Card key={review._id} sx={{ mb: 3, borderRadius: 3, boxShadow: 2, p: 1 }}>
                     <CardContent>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                        <Stack direction="row" spacing={2}>
+                            <Avatar sx={{ bgcolor: deepPurple[500], width: 48, height: 48 }}>
                                 {review.postedBy.fullName.charAt(0).toUpperCase()}
                             </Avatar>
-                            <Box sx={{display:"flex", flexDirection:"column"}}>
-                                <Typography >{review.postedBy.fullName}</Typography>
-                                <Typography   fontWeight={600}>
+
+                            <Box sx={{ flexGrow: 1 }}>
+                               <Box sx={{display:"flex"}}>
+                                <Typography variant="subtitle1" fontWeight={600}>
+                                    {review.postedBy.fullName}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" >
                                     {review.companyName}
                                 </Typography>
-                                <Rating value={review.rating} readOnly size="small" sx={{ mt: 0.5 }} />
-                                <Typography variant="body2" mt={1}>
-                                    {review.text}
+                                </Box>
+                                <Rating value={review.rating} readOnly size="small" sx={{ mb: 1 }} />
+                                <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                                    "{review.text}"
                                 </Typography>
+
+                                <Stack direction="row" spacing={1} alignItems="center" mt={1}>
+                                    <IconButton size="small">
+                                        <ThumbUpAltOutlinedIcon fontSize="small" />
+                                    </IconButton>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Helpful
+                                    </Typography>
+                                    
+                                </Stack>
                             </Box>
                         </Stack>
                     </CardContent>
                 </Card>
             ))}
 
-
-
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 5 }}>
                 <Typography variant="h6" mb={2}>
                     Submit Your Review
                 </Typography>
@@ -137,14 +157,16 @@ const CompanyReviews = () => {
                     required
                 />
 
-                <Rating
-                    name="rating"
-                    value={newReview.rating}
-                    onChange={(e, newValue) =>
-                        setNewReview((prev) => ({ ...prev, rating: newValue }))
-                    }
-                    size="large"
-                />
+                <Box sx={{ mt: 2, mb: 2 }}>
+                    <Rating
+                        name="rating"
+                        value={newReview.rating}
+                        onChange={(e, newValue) =>
+                            setNewReview((prev) => ({ ...prev, rating: newValue }))
+                        }
+                        size="large"
+                    />
+                </Box>
 
                 <TextField
                     label="Your Review"
@@ -158,8 +180,20 @@ const CompanyReviews = () => {
                     required
                 />
 
-                <Button type="submit" variant="contained" color="secondary"
-                 >
+                <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                        mt: 3,
+                        px: 4,
+                        py: 1,
+                        borderRadius: 2,
+                        backgroundColor: deepPurple[500],
+                        '&:hover': {
+                            backgroundColor: deepPurple[700],
+                        },
+                    }}
+                >
                     Submit Review
                 </Button>
             </Box>

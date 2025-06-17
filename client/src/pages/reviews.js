@@ -4,7 +4,7 @@ import CompanyReviews from '../components/reviews/CompanyReviews'
 
 const ReviewsPage = () => {
   return (
-    <div>
+    <div >
       <CompanyReviews/>
     </div>
   )
