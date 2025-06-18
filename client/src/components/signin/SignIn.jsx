@@ -1,15 +1,15 @@
 "use client"
-
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 import styles from "./SignIn.module.scss"
-
+import toast from "react-hot-toast";
 const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [signingIn, setSigningIn] = useState(false)
   const [focusedField, setFocusedField] = useState(null)
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSigningIn(true)
@@ -29,7 +29,9 @@ const SignIn = () => {
       if (response.ok) {
         localStorage.setItem("token", data.token)
         localStorage.setItem("user", JSON.stringify(data.user))
-        console.log("Login successful")
+        toast.success("Login successful");
+        navigate("/home");
+
       } else {
         throw new Error(data.error || "Login failed")
       }
