@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import styles from "./SignIn.module.scss"
 import toast from "react-hot-toast";
+import axios from "axios";
 const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -15,28 +16,28 @@ const SignIn = () => {
     setSigningIn(true)
 
     try {
-      // Your existing API call logic here
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+        email,
+        password,
+      });
 
-      const data = await response.json()
+      const { token, user } = response.data;
 
-      if (response.ok) {
-        localStorage.setItem("token", data.token)
-        localStorage.setItem("user", JSON.stringify(data.user))
-        toast.success("Login successful");
-        navigate("/home");
 
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      toast.success("Login successful");
+      navigate("/home");
+
+      } 
+    catch (err) {
+      if (err.response?.status === 401) {
+        toast.error("Invalid email or password");
       } else {
-        throw new Error(data.error || "Login failed")
+        const message = err.response?.data?.error || "Something went wrong. Please try again.";
+        toast.error(message);
       }
-    } catch (err) {
-      console.error("Login error:", err)
     } finally {
       setSigningIn(false)
     }
@@ -48,7 +49,7 @@ const SignIn = () => {
 
   return (
     <div className={styles.container}>
-      {/* Animated Background */}
+      
       <div className={styles.backgroundShapes}>
         <div className={styles.shape1}></div>
         <div className={styles.shape2}></div>
