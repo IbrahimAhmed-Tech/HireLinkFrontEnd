@@ -1,0 +1,25 @@
+.not-found {
+    text-align: center;
+    margin-top: 100px;
+
+    &__code {
+        font-size: 6rem;
+        color: #f44336;
+        font-weight: bold;
+    }
+
+    &__title {
+        margin-top: 10px;
+        font-weight: 500;
+    }
+
+    &__message {
+        margin: 20px 0;
+        color: #666;
+    }
+
+    &__button {
+        margin-top: 10px;
+        text-transform: none;
+    }
+}

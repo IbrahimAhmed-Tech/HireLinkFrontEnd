@@ -8,6 +8,7 @@ import ReviewsPage from "../pages/reviews";
 import AuthLayoutRoutes from "./AuthLayoutRoutes";
 import PrivateLayoutRoutes from "./PrivateLayoutRoutes";
 import PublicLayoutRoutes from "./PublicLayoutRoutes";
+import NotFoundPage from "../pages/notfound";
 
 
 
@@ -32,7 +33,7 @@ const MyRouter = () => {
                 </Route>
 
               
-                {/* <Route path="*" element={<NotFound />} /> */}
+                <Route path="*" element={<NotFoundPage />} />
 
             </Routes>
         </Router>

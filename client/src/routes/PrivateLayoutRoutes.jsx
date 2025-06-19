@@ -13,6 +13,7 @@ const PrivateLayoutRoutes = () => {
         const token = localStorage.getItem("token");
 
         const checkToken = async () => {
+            console.log("Checking token in private....",token);
             if (!token) {
                 toast.error("Unauthorized User");
                 navigate("/");

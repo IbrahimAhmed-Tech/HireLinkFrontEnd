@@ -11,18 +11,19 @@ const PublicLayoutRoutes = () => {
         const token = localStorage.getItem("token");
 
         const checkToken = async () => {
+            console.log("Checking token in public.", token);
             if (!token) {
                 return;
             }
             try {
-                const response = await axios.get("/api/auth/validate-token", {
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/validate-token`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 });
 
-                if (response.status === 200) {
+                if (response.status !== 200) {
                     navigate("/");
                 }
             } catch (err) {
